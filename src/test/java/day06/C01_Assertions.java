@@ -22,43 +22,46 @@ public class C01_Assertions {
     //		○ FrancaisLinkTest => Fransizca Linkin görüntülendiğini test edin
 
     static WebDriver driver;
-
     @BeforeClass
     public static void setup(){
-        WebDriverManager.chromedriver().setup();
-        driver=new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-        driver.get("https://www.bestbuy.com/");
-    }
-    @Test
-    public void urlTest(){
-        String expectedURL="https://www.bestbuy1.com/";
-        String actualURL= driver.getCurrentUrl();
-        Assert.assertEquals("Istenen URL bulanamadi",expectedURL,actualURL);
+    WebDriverManager.chromedriver().setup();
+    driver=new ChromeDriver();
+    driver.manage().timeouts().implicitlyWait(15,TimeUnit.SECONDS);
+    driver.manage().window().maximize();
+    driver.get("https://www.bestbuy.com/");
 
+}
+
+    @Test
+    public void urlCheck(){
+        Assert.assertEquals("Istenen Url bulunamadi","https://www.bestbuy.com/",driver.getCurrentUrl());
     }
 
     @Test
     public void titleTest(){
-        String istenmeyenKelime="Rest";
-        String actualTitle=driver.getTitle();
+        Assert.assertFalse("Istenmeyen kelime title da var",driver.getTitle().contains("Rest"));
+        //Baslikta Rest olmadigi icin Test passed verdi
 
-        Assert.assertFalse("istenmeyen kelime title da var", actualTitle.contains(istenmeyenKelime));
+    }
+   // @Test
+   //    public void titleTest2() {
+   //        Assert.assertFalse("Istenmeyen kelime title da var", driver.getTitle().contains("Best"));
+   //        //Baslikta Best oldugu icin Test failed verdi
+   //    }
+
+    @Test
+    public void logoTesti(){
+        Assert.assertTrue("Logo goruntelenemedi",driver.findElement(By.xpath("(//*[@class='logo'])[1]")).isDisplayed());
     }
     @Test
-    public void logoTest(){
-        WebElement logo = driver.findElement(By.xpath("(//img[@class= 'logo'])[1]"));
-        Assert.assertTrue("Logo gorunmuyor", logo.isDisplayed());
-    }
-    @Test
-    public void fransizcaTesti(){
-        WebElement fransizcaLinki=driver.findElement(By.xpath("//button[text()='Français']"));
-        Assert.assertTrue("Fransizca linki gorunmuyor",fransizcaLinki.isDisplayed());
+    public void fransizcaLinTesti(){
+        Assert.assertTrue("Fransizca dil secenegi yok",driver.findElement(By.xpath("(//*[@lang='fr'])[1]")).isDisplayed());
+
     }
 
     @AfterClass
     public static void tearDown(){
         driver.close();
     }
+
 }
